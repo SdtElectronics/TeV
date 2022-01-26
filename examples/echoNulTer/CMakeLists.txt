@@ -1,0 +1,25 @@
+add_executable(echoServerNulTer
+    echoServer.cxx
+)
+target_include_directories(echoServerNulTer 
+  PUBLIC
+    ${PROJECT_SOURCE_DIR}/include
+)
+target_link_libraries(echoServerNulTer 
+  PRIVATE
+    Threads::Threads
+    tcp_response
+)
+
+add_executable(echoClientNulTer
+    echoClient.cxx
+)
+target_include_directories(echoClientNulTer 
+  PUBLIC
+    ${PROJECT_SOURCE_DIR}/include
+)
+target_link_libraries(echoClientNulTer 
+  PRIVATE
+    Threads::Threads
+    tcp_request
+)

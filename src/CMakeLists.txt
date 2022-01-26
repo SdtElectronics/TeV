@@ -1,0 +1,34 @@
+add_library(tcp_session
+tcpSession.cxx
+)
+target_include_directories(tcp_session 
+  PUBLIC
+    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/include/asio
+)
+
+add_library(tcp_response
+    tcpResponse.cxx
+)
+target_include_directories(tcp_response 
+  PUBLIC
+    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/include/asio
+)
+target_link_libraries(tcp_response 
+  PRIVATE
+    tcp_session
+)
+
+add_library(tcp_request
+    tcpRequest.cxx
+)
+target_include_directories(tcp_request 
+  PUBLIC
+    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/include/asio
+)
+target_link_libraries(tcp_request 
+  PRIVATE
+    tcp_session
+)

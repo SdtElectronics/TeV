@@ -1,0 +1,25 @@
+add_executable(timeoutServer
+    timeoutServer.cxx
+)
+target_include_directories(timeoutServer 
+  PUBLIC
+    ${PROJECT_SOURCE_DIR}/include
+)
+target_link_libraries(timeoutServer 
+  PRIVATE
+    Threads::Threads
+    tcp_response
+)
+
+add_executable(timeoutClient
+    timeoutClient.cxx
+)
+target_include_directories(timeoutClient 
+  PUBLIC
+    ${PROJECT_SOURCE_DIR}/include
+)
+target_link_libraries(timeoutClient 
+  PRIVATE
+    Threads::Threads
+    tcp_request
+)

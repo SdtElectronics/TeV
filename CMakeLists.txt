@@ -1,0 +1,41 @@
+cmake_minimum_required(VERSION 3.10...3.21)
+
+project(
+  tev
+  VERSION 0.1
+  LANGUAGES CXX)
+
+### Require out-of-source builds
+file(TO_CMAKE_PATH "${PROJECT_BINARY_DIR}/CMakeLists.txt" LOC_PATH)
+if(EXISTS "${LOC_PATH}")
+    message(FATAL_ERROR "You cannot build in a source directory (or any directory with "
+                        "CMakeLists.txt file). Please make a build subdirectory. Feel free to "
+                        "remove CMakeCache.txt and CMakeFiles.")
+endif()
+
+# use -std=c++xx instead of -std=g++xx
+set(CMAKE_CXX_EXTENSIONS OFF)
+# support folders in IDE's
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+if (APPLE)
+  set(cxxlib libc++)
+  set(force_compiler "compiler=apple-clang")
+else ()
+  set(cxxlib libstdc++11)
+  set(force_compiler "")
+endif()
+
+set(CMAKE_CXX_STANDARD 11)
+
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+
+add_subdirectory(src)
+add_subdirectory(examples/echoHeader)
+add_subdirectory(examples/echoNulTer)
+add_subdirectory(examples/timeout)
+
+if(BUILD_TESTING)
+  add_subdirectory(tests)
+endif()
