@@ -31,11 +31,18 @@ set(CMAKE_CXX_STANDARD 11)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
-add_subdirectory(src)
-add_subdirectory(examples/echoHeader)
-add_subdirectory(examples/echoNulTer)
-add_subdirectory(examples/timeout)
+option(BUILD_EXAMPLES "Build examples" ON)
+option(BUILD_TESTS "Build test" OFF)
 
-if(BUILD_TESTING)
+add_subdirectory(src)
+
+if(BUILD_EXAMPLES)
+  add_subdirectory(examples/echoHeader)
+  add_subdirectory(examples/echoNulTer)
+  add_subdirectory(examples/timeout)
+  add_subdirectory(examples/builder)
+endif()
+
+if(BUILD_TESTS)
   add_subdirectory(tests)
 endif()

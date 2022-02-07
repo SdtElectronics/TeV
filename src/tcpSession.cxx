@@ -1,4 +1,11 @@
+// SPDX-License-Identifier: BSD-3-Clause
+// Copyright (c) 2022 SdtElectronics
+// All rights reserved. Use of this source code is governed by
+// a BSD-style license that can be found in the LICENSE file.
+
 #ifndef TEVHDRONLY
+#include <limits>
+
 #include "bufReader.h"
 #include "tcp/tcpSession.h"
 #endif
@@ -20,11 +27,16 @@ void TCPsession::close(){
 }
 
 std::string TCPsession::getMessage(std::size_t length){
-    return BufReader(message_)(length);
+    std::istream stream(&message_);
+    std::string result(length, ' ');
+    stream.read(&result[0], length);
+    return result;
 }
 
 std::string TCPsession::getMessage(){
-    return BufReader(message_)();
+    std::istream stream(&message_);
+    std::string ret(std::istreambuf_iterator<char>(stream), {});
+    return ret;
 }
 
 std::string TCPsession::getRemoteIP() const{

@@ -16,15 +16,7 @@ class TimeoutClient: public Session{
                   << " disconnected" << std::endl;
     }
 
-    virtual void onConnectError(TCPsession& session, const std::string& err)override{
-        std::cout << err << std::endl;
-    }
-
-    virtual void onReadError   (TCPsession& session, const std::string& err)override{
-        std::cout << err << std::endl;
-    }
-
-    virtual void onWriteError  (TCPsession& session, const std::string& err)override{
+    virtual void onError(TCPsession& session, const std::string& err, ErrorType)override{
         std::cout << err << std::endl;
     }
 
@@ -32,7 +24,7 @@ class TimeoutClient: public Session{
         std::string buf;
         std::getline(std::cin, buf);
         buf += '\0';
-        session.asyncWrite(buf, [this](TCPsession& session_){
+        session.asyncWrite(SharedBuffer(std::move(buf)), [this](TCPsession& session_){
             doWrite(session_);
         });
     }

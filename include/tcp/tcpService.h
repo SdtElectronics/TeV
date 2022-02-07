@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: BSD-3-Clause
+// Copyright (c) 2022 SdtElectronics 
+// All rights reserved. Use of this source code is governed by 
+// a BSD-style license that can be found in the LICENSE file.
 
 #ifndef tevtcpservice
 #define tevtcpservice
@@ -27,6 +31,16 @@ class Service<V4ORV6>{
             std::error_code ec;
             // Some system don't support this flag
             // Use error_code to prevent throwing an exception
+            acceptorV6_.set_option(asio::ip::v6_only(true), ec);
+    }
+
+    // addrV4: IPv4 address to listen
+    // addrV6: IPv6 address to listen
+    // port: port this service to listen
+    Service(const char* addrV4, const char* addrV6, short port, asio::io_context& asio_ctx):
+        acceptorV4_(asio_ctx, tcp::endpoint(asio::ip::address::from_string(addrV4), port)),
+        acceptorV6_(asio_ctx, tcp::endpoint(asio::ip::address::from_string(addrV6), port)){
+            std::error_code ec;
             acceptorV6_.set_option(asio::ip::v6_only(true), ec);
     }
 
@@ -73,6 +87,12 @@ class Service<V4ONLY>{
         acceptor_(asio_ctx, tcp::endpoint(tcp::v4(), port)){
     }
 
+    // addrV4: IPv4 address to listen
+    // port: port this service to listen
+    Service(const char* addrV4, short port, asio::io_context& asio_ctx):
+        acceptor_(asio_ctx, tcp::endpoint(asio::ip::address::from_string(addrV4), port)){
+    }
+
     template<typename DF>
     // dialogueFactory: A callable returning a std::shared_ptr to session object
     void start(DF dialogueFactory, std::size_t maxLength = 65535){
@@ -107,6 +127,16 @@ class Service<V6ONLY>{
     // port: port this service to listen
     Service(short port, asio::io_context& asio_ctx):
         acceptor_(asio_ctx, tcp::endpoint(tcp::v6(), port)){
+        std::error_code ec;
+        acceptor_.set_option(asio::ip::v6_only(true), ec);
+    }
+
+    // addrV6: IPv6 address to listen
+    // port: port this service to listen
+    Service(const char* addrV4, const char* addrV6, short port, asio::io_context& asio_ctx):
+        acceptor_(asio_ctx, tcp::endpoint(asio::ip::address::from_string(addrV6), port)){
+        std::error_code ec;
+        acceptor_.set_option(asio::ip::v6_only(true), ec);
     }
 
     template<typename DF>

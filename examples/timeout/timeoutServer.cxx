@@ -15,20 +15,11 @@ class TimeoutServer: public Session{
                   << " disconnected" << std::endl;
     }
 
-    virtual void onWriteError  (TCPsession& session, const std::string& err)override{
-        std::cout << err << std::endl;
-    }
-
-    virtual void onReadError   (TCPsession& session, const std::string& err)override{
-        std::cout << err << std::endl;
-    }
-
-    virtual void onConnectError(TCPsession& session, const std::string& err)override{
+    virtual void onError(TCPsession& session, const std::string& err, ErrorType)override{
         std::cout << err << std::endl;
     }
 
     virtual ~TimeoutServer(){
-        std::cout << "destructed" << std::endl;
     }
 
   private:
@@ -41,8 +32,8 @@ class TimeoutServer: public Session{
         );
 
         session.asyncRead('\0', 
-        [this, timerPtr](TCPsession& session_, const std::string& msg){
-            std::cout << msg << std::endl;
+        [this, timerPtr](TCPsession& session_){
+            std::cout << session_.getMessage() << std::endl;
             timerPtr->cancel();
             doRead(session_);
         });

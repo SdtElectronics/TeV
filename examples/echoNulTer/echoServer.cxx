@@ -16,23 +16,15 @@ class EchoServer: public Session{
                   << " disconnected" << std::endl;
     }
 
-    virtual void onWriteError  (TCPsession& session, const std::string& err)override{
-        std::cout << err << std::endl;
-    }
-
-    virtual void onReadError   (TCPsession& session, const std::string& err)override{
-        std::cout << err << std::endl;
-    }
-
-    virtual void onConnectError(TCPsession& session, const std::string& err)override{
+    virtual void onError(TCPsession& session, const std::string& err, ErrorType)override{
         std::cout << err << std::endl;
     }
 
   private:
     void doRead(TCPsession& session){
-        session.asyncRead('\0', [this](TCPsession& session_, const std::string& msg){
-            std::cout << msg << std::endl;
-            session_.asyncWrite(msg, [this](TCPsession& session__){
+        session.asyncRead('\0', [this](TCPsession& session_){
+            session_.asyncWrite(SharedBuffer(session_.getMessage()), 
+            [this](TCPsession& session__){
                 doRead(session__);
             });
         });

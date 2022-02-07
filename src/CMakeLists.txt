@@ -1,13 +1,4 @@
-add_library(tcp_session
-tcpSession.cxx
-)
-target_include_directories(tcp_session 
-  PUBLIC
-    ${PROJECT_SOURCE_DIR}/include
-    ${PROJECT_SOURCE_DIR}/include/asio
-)
-
-add_library(tcp_response
+add_library(tcp_response OBJECT
     tcpResponse.cxx
 )
 target_include_directories(tcp_response 
@@ -15,12 +6,8 @@ target_include_directories(tcp_response
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/include/asio
 )
-target_link_libraries(tcp_response 
-  PRIVATE
-    tcp_session
-)
 
-add_library(tcp_request
+add_library(tcp_request OBJECT
     tcpRequest.cxx
 )
 target_include_directories(tcp_request 
@@ -28,7 +15,34 @@ target_include_directories(tcp_request
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/include/asio
 )
-target_link_libraries(tcp_request 
+
+if(MSVC)
+    target_compile_options(tcp_response
+      PUBLIC
+        /W4
+    )
+
+    target_compile_options(tcp_request
+      PUBLIC
+        /W4
+    )
+else()
+    target_compile_options(tcp_response
+      PUBLIC
+        -Wall -Wextra -Wpedantic
+    )
+
+    target_compile_options(tcp_request
+      PUBLIC
+        -Wall -Wextra -Wpedantic
+    )
+endif()
+
+add_library(tev
+    tcpSession.cxx
+)
+target_link_libraries(tev 
   PRIVATE
-    tcp_session
+    tcp_response
+    tcp_request
 )

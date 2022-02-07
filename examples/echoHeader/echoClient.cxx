@@ -17,15 +17,7 @@ class EchoClient: public Session{
                   << " disconnected" << std::endl;
     }
 
-    virtual void onConnectError(TCPsession& session, const std::string& err)override{
-        std::cout << err << std::endl;
-    }
-
-    virtual void onReadError   (TCPsession& session, const std::string& err)override{
-        std::cout << err << std::endl;
-    }
-
-    virtual void onWriteError  (TCPsession& session, const std::string& err)override{
+    virtual void onError(TCPsession& session, const std::string& err, ErrorType)override{
         std::cout << err << std::endl;
     }
 
@@ -34,8 +26,8 @@ class EchoClient: public Session{
         std::getline(std::cin, buf);
         headerProtocol::send(session, buf, [this](TCPsession& session_){
             headerProtocol::receive(session_, 
-            [this](TCPsession& session__, const std::string& msg){
-                std::cout << msg << std::endl;
+            [this](TCPsession& session__){
+                std::cout << session__.getMessage() << std::endl;
                 doWrite(session__);
             });
         });

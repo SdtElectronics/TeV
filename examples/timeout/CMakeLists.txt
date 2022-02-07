@@ -2,24 +2,26 @@ add_executable(timeoutServer
     timeoutServer.cxx
 )
 target_include_directories(timeoutServer 
-  PUBLIC
+  PRIVATE
+    ${PROJECT_SOURCE_DIR}/include/asio
     ${PROJECT_SOURCE_DIR}/include
 )
 target_link_libraries(timeoutServer 
   PRIVATE
     Threads::Threads
-    tcp_response
+    tev
 )
 
 add_executable(timeoutClient
     timeoutClient.cxx
 )
 target_include_directories(timeoutClient 
-  PUBLIC
+  PRIVATE
+    ${PROJECT_SOURCE_DIR}/include/asio
     ${PROJECT_SOURCE_DIR}/include
 )
 target_link_libraries(timeoutClient 
   PRIVATE
     Threads::Threads
-    tcp_request
+    tev
 )
