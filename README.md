@@ -37,7 +37,7 @@ class Server: public Session{
 
     virtual ~TimeoutServer(){}
 
-  private:
+    private:
     void doRead(TCPsession& session){
         session.asyncRead('\0', 
         [](TCPsession& session_){

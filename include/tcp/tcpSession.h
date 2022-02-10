@@ -187,7 +187,7 @@ TCPsession::Timer TCPsession::expire(
 }
 
 #ifdef TEVHDRONLY
-#include "src/tcpResponse.cxx"
+#include "src/tcpSession.cxx"
 #endif
 
 #endif

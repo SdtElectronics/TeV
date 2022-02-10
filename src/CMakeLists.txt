@@ -38,6 +38,7 @@ else()
     )
 endif()
 
+
 add_library(tev
     tcpSession.cxx
 )
@@ -45,4 +46,11 @@ target_link_libraries(tev
   PRIVATE
     tcp_response
     tcp_request
+  INTERFACE
+    Threads::Threads
+)
+
+target_include_directories(tev 
+  INTERFACE
+    ${PROJECT_SOURCE_DIR}/include
 )

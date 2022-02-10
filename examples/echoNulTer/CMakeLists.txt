@@ -4,11 +4,9 @@ add_executable(echoServerNulTer
 target_include_directories(echoServerNulTer 
   PRIVATE
     ${PROJECT_SOURCE_DIR}/include/asio
-    ${PROJECT_SOURCE_DIR}/include
 )
 target_link_libraries(echoServerNulTer 
   PRIVATE
-    Threads::Threads
     tev
 )
 
@@ -18,10 +16,8 @@ add_executable(echoClientNulTer
 target_include_directories(echoClientNulTer 
   PRIVATE
     ${PROJECT_SOURCE_DIR}/include/asio
-    ${PROJECT_SOURCE_DIR}/include
 )
 target_link_libraries(echoClientNulTer 
   PRIVATE
-    Threads::Threads
     tev
 )

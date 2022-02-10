@@ -37,6 +37,7 @@ option(BUILD_TESTS "Build test" OFF)
 add_subdirectory(src)
 
 if(BUILD_EXAMPLES)
+  add_subdirectory(examples/headerOnly)
   add_subdirectory(examples/echoHeader)
   add_subdirectory(examples/echoNulTer)
   add_subdirectory(examples/timeout)

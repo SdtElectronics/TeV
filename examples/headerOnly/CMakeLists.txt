@@ -1,0 +1,27 @@
+add_executable(echoServerHdrOnly
+    echoServer.cxx
+)
+target_include_directories(echoServerHdrOnly
+  PRIVATE
+    ${PROJECT_SOURCE_DIR}/include/asio
+    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}
+)
+target_link_libraries(echoServerHdrOnly
+  PRIVATE
+    Threads::Threads
+)
+
+add_executable(echoClientHdrOnly
+    echoClient.cxx
+)
+target_include_directories(echoClientHdrOnly
+  PRIVATE
+    ${PROJECT_SOURCE_DIR}/include/asio
+    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}
+)
+target_link_libraries(echoClientHdrOnly
+  PRIVATE
+    Threads::Threads
+)

@@ -37,7 +37,7 @@ class TCPrequest: public TCPsession{
 }
 
 #ifdef TEVHDRONLY
-#include "src/tcpResponse.cxx"
+#include "src/tcpRequest.cxx"
 #endif
 
 #endif

@@ -4,11 +4,9 @@ add_executable(timeoutServer
 target_include_directories(timeoutServer 
   PRIVATE
     ${PROJECT_SOURCE_DIR}/include/asio
-    ${PROJECT_SOURCE_DIR}/include
 )
 target_link_libraries(timeoutServer 
   PRIVATE
-    Threads::Threads
     tev
 )
 
@@ -18,10 +16,8 @@ add_executable(timeoutClient
 target_include_directories(timeoutClient 
   PRIVATE
     ${PROJECT_SOURCE_DIR}/include/asio
-    ${PROJECT_SOURCE_DIR}/include
 )
 target_link_libraries(timeoutClient 
   PRIVATE
-    Threads::Threads
     tev
 )

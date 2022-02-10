@@ -4,11 +4,9 @@ add_executable(echoServerByBuilder
 target_include_directories(echoServerByBuilder 
   PRIVATE
     ${PROJECT_SOURCE_DIR}/include/asio
-    ${PROJECT_SOURCE_DIR}/include
 )
 target_link_libraries(echoServerByBuilder 
   PRIVATE
-    Threads::Threads
     tev
 )
 
@@ -18,10 +16,8 @@ add_executable(echoClientByBuilder
 target_include_directories(echoClientByBuilder 
   PRIVATE
     ${PROJECT_SOURCE_DIR}/include/asio
-    ${PROJECT_SOURCE_DIR}/include
 )
 target_link_libraries(echoClientByBuilder 
   PRIVATE
-    Threads::Threads
     tev
 )

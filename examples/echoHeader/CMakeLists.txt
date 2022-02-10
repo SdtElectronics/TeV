@@ -3,12 +3,10 @@ add_executable(echoServerHeader
 )
 target_include_directories(echoServerHeader 
   PRIVATE
-    ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/include/asio
 )
 target_link_libraries(echoServerHeader 
   PRIVATE
-    Threads::Threads
     tev
 )
 
@@ -17,11 +15,9 @@ add_executable(echoClientHeader
 )
 target_include_directories(echoClientHeader 
   PRIVATE
-    ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/include/asio
 )
 target_link_libraries(echoClientHeader 
   PRIVATE
-    Threads::Threads
     tev
 )
