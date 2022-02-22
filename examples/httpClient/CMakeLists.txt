@@ -1,0 +1,11 @@
+add_executable(httpClient
+    httpClient.cxx
+)
+target_include_directories(httpClient 
+  PRIVATE
+    ${PROJECT_SOURCE_DIR}/include/asio
+)
+target_link_libraries(httpClient 
+  PRIVATE
+    tev
+)

@@ -1,4 +1,5 @@
 .vscode
 .tev
 build
+external
 include/asio

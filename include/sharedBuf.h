@@ -16,6 +16,8 @@ namespace tev{
 
 class SharedBuffer{
   public:
+    inline SharedBuffer(){}
+    
     inline SharedBuffer(const std::string& data){
         data_.push_back(data);
     }
@@ -63,6 +65,14 @@ class SharedBuffer{
   private:
     std::vector<std::string> data_;
 };
+
+inline SharedBuffer& operator<<(SharedBuffer& buf, const std::string& data){
+    return buf.append(data);
+}
+
+inline SharedBuffer& operator<<(SharedBuffer& buf, const char* data){
+    return buf.append(std::string(data));
+}
 
 }
 

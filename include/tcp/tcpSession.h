@@ -45,9 +45,17 @@ class TCPsession: public std::enable_shared_from_this<TCPsession>{
     template<typename Rep, typename Period>
     using duration = std::chrono::duration<Rep, Period>;
     using Timer = asio::steady_timer;
+    using TimePoint = std::chrono::time_point<std::chrono::steady_clock>;
+
+    template<typename CB>
+    // Invoke callback at timePoint
+    Timer deferAt(const TimePoint& timePoint, CB&& callback);
     // Invoke callback after timeout
     template<typename Rep, typename Period, typename CB>
     Timer defer(const duration<Rep, Period>& timeout, CB&& callback);
+    // Close session at timePoint
+    template<typename CB>
+    Timer expireAt(const TimePoint& timePoint, CB&& callback);
     // Close session after timeout
     template<typename Rep, typename Period>
     Timer expire(const duration<Rep, Period>& timeout);
@@ -155,11 +163,10 @@ void TCPsession::asyncWrite(SharedBuffer bufs, CB&& callback){
     });
 }
 
-template<typename Rep, typename Period, typename CB>
-TCPsession::Timer TCPsession::defer(
-    const TCPsession::duration<Rep, Period>& timeout, CB&& callback){
+template<typename CB>
+TCPsession::Timer TCPsession::deferAt(const TCPsession::TimePoint& timePoint, CB&& callback){
     auto& ctx = static_cast<asio::io_context&>(socket_.get_executor().context());
-    Timer timer(ctx, std::chrono::steady_clock::now() + timeout);
+    Timer timer(ctx, timePoint);
     timer.async_wait([TEVCAPTMOVE(callback)](const std::error_code& ec){
         if(ec != asio::error::operation_aborted){
             callback(ec);
@@ -168,9 +175,22 @@ TCPsession::Timer TCPsession::defer(
     return timer;
 }
 
+template<typename Rep, typename Period, typename CB>
+TCPsession::Timer TCPsession::defer(const TCPsession::duration<Rep, Period>& timeout, 
+                                    CB&& callback){
+    return deferAt(std::chrono::steady_clock::now() + timeout, std::forward<CB>(callback));
+}
+
 template<typename Rep, typename Period>
 TCPsession::Timer TCPsession::expire(const TCPsession::duration<Rep, Period>& timeout){
     return defer(timeout, [this](const std::error_code& ec){
+        close();
+    });
+}
+
+template<typename CB>
+TCPsession::Timer TCPsession::expireAt(const TCPsession::TimePoint& timePoint, CB&& callback){
+    return deferAt(timePoint, [this](const std::error_code& ec){
         close();
     });
 }

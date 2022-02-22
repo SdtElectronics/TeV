@@ -16,26 +16,25 @@ TCPrequest::TCPrequest(dialoguePtr dialogue, asio::io_context& asio_ctx, std::si
 }
 
 void TCPrequest::send(const char* hostname, const char* port){
-    auto self(this->shared_from_this());
+    auto self(std::static_pointer_cast<TCPrequest>(this->shared_from_this()));
     resolver_.async_resolve(hostname, port, 
-    [this, self](
-        const std::error_code& ec, const tcp::resolver::results_type& results){
+    [self](const std::error_code& ec, const tcp::resolver::results_type& results){
         if (!ec){
-            asyncConnect(results);
+            self->asyncConnect(results);
         }else{
-            dialogue_->onConnectError(*this, ec.message());
+            self->dialogue_->onConnectError(*self, ec.message());
         }
     });
 }
 
 void TCPrequest::asyncConnect(const tcp::resolver::results_type& results){
-    auto self(this->shared_from_this());
+    auto self(std::static_pointer_cast<TCPrequest>(this->shared_from_this()));
     asio::async_connect(socket_, results, 
-    [this, self](const std::error_code& ec, const tcp::endpoint&){
+    [self](const std::error_code& ec, const tcp::endpoint&){
         if(!ec){
-            dialogue_->onConnect(*this);
+            self->dialogue_->onConnect(*self);
         }else{
-            dialogue_->onConnectError(*this, ec.message());
+            self->dialogue_->onConnectError(*self, ec.message());
         }
     });
 }

@@ -27,12 +27,54 @@ class TCPrequest: public TCPsession{
     // send request to hostname:port
     TEVINLINE void send(const char* hostname, const char* port);
 
+    template<typename Rep, typename Period>
+    using duration = std::chrono::duration<Rep, Period>;
+    // send request to hostname:port, cancel if failed to connect within timeout
+    template<typename Rep, typename Period>
+    void send(const char* hostname, const char* port, const duration<Rep, Period>& timeout); 
+
   private:
     TEVINLINE void asyncConnect(const tcp::resolver::results_type& results);
 
     tcp::resolver resolver_;
     asio::io_context& asio_ctx_;
 };
+
+template<typename Rep, typename Period>
+void TCPrequest::send(const char* hostname, const char* port, const duration<Rep, Period>& timeout){
+    auto self(std::static_pointer_cast<TCPrequest>(this->shared_from_this()));
+    auto timerPtr = std::make_shared<TCPsession::Timer>(
+        expire(timeout, 
+        [this](const std::error_code& ec){
+            dialogue_->onConnectError(*this, std::string("Resolve timeout"));
+        })
+    );
+
+    resolver_.async_resolve(hostname, port, 
+    [self, timerPtr](const std::error_code& ec, const tcp::resolver::results_type& results) mutable{
+        timerPtr->cancel();
+        timerPtr = std::make_shared<TCPsession::Timer>(
+            self->expireAt(timerPtr->expiry(), 
+            [self](const std::error_code& ec){
+                self->dialogue_->onConnectError(*self, std::string("Connect timeout"));
+            })
+        );
+
+        if (!ec){
+            asio::async_connect(self->socket_, results, 
+            [self, timerPtr](const std::error_code& ec, const tcp::endpoint&){
+                timerPtr->cancel();
+                if(!ec){
+                    self->dialogue_->onConnect(*self);
+                }else{
+                    self->dialogue_->onConnectError(*self, ec.message());
+                }
+            });
+        }else{
+            self->dialogue_->onConnectError(*self, ec.message());
+        }
+    });
+}
 
 }
 

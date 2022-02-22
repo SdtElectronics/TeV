@@ -95,6 +95,11 @@ int main(){
 * Echo client and server, session defined by chain of callbacks: [builder](examples/builder)
 * Timeout server: [timeout](examples/timeout)
 
+## Integration
+### As a cmake subproject
+
+### As a header-only library
+
 ## References
 ### TcpSession
 `TCPsession` encapsulated operations to be applied on the socket, including read, write, close, stat etc. This class should not be instantiated, but is passed to user-defined callbacks by reference.

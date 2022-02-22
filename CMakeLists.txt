@@ -5,12 +5,23 @@ project(
   VERSION 0.1
   LANGUAGES CXX)
 
+option(BUILD_EXAMPLES "Build examples" ON)
+option(BUILD_TESTS "Build test" OFF)
+
 ### Require out-of-source builds
 file(TO_CMAKE_PATH "${PROJECT_BINARY_DIR}/CMakeLists.txt" LOC_PATH)
 if(EXISTS "${LOC_PATH}")
     message(FATAL_ERROR "You cannot build in a source directory (or any directory with "
                         "CMakeLists.txt file). Please make a build subdirectory. Feel free to "
                         "remove CMakeCache.txt and CMakeFiles.")
+endif()
+
+## Setup dependencies using CPM
+set(CPM_SOURCE_CACHE "${PROJECT_SOURCE_DIR}/external")
+include("cmake/getCPM.cmake")
+
+if(BUILD_TESTS)
+  CPMAddPackage("gh:catchorg/Catch2@2.5.0")
 endif()
 
 # use -std=c++xx instead of -std=g++xx
@@ -31,9 +42,6 @@ set(CMAKE_CXX_STANDARD 11)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
-option(BUILD_EXAMPLES "Build examples" ON)
-option(BUILD_TESTS "Build test" OFF)
-
 add_subdirectory(src)
 
 if(BUILD_EXAMPLES)
@@ -42,6 +50,7 @@ if(BUILD_EXAMPLES)
   add_subdirectory(examples/echoNulTer)
   add_subdirectory(examples/timeout)
   add_subdirectory(examples/builder)
+  add_subdirectory(examples/httpClient)
 endif()
 
 if(BUILD_TESTS)
