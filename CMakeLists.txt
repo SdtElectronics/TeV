@@ -21,7 +21,11 @@ set(CPM_SOURCE_CACHE "${PROJECT_SOURCE_DIR}/external")
 include("cmake/getCPM.cmake")
 
 if(BUILD_TESTS)
-  CPMAddPackage("gh:catchorg/Catch2@2.5.0")
+  CPMAddPackage(
+    NAME Catch2
+    GITHUB_REPOSITORY catchorg/Catch2
+    GIT_TAG v2.5.0
+  )
 endif()
 
 # use -std=c++xx instead of -std=g++xx

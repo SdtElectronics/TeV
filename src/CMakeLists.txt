@@ -1,3 +1,12 @@
+add_library(streambuf OBJECT
+    streambuf.cxx
+)
+target_include_directories(streambuf 
+  PUBLIC
+    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/include/asio
+)
+
 add_library(tcp_response OBJECT
     tcpResponse.cxx
 )
@@ -17,24 +26,22 @@ target_include_directories(tcp_request
 )
 
 if(MSVC)
-    target_compile_options(tcp_response
-      PUBLIC
-        /W4
-    )
+    set_target_properties(
+        streambuf
+        tcp_response
+        tcp_request
 
-    target_compile_options(tcp_request
-      PUBLIC
-        /W4
+      PROPERTIES 
+        COMPILE_OPTIONS /W4
     )
 else()
-    target_compile_options(tcp_response
-      PUBLIC
-        -Wall -Wextra -Wpedantic
-    )
+    set_target_properties(
+        streambuf
+        tcp_response
+        tcp_request
 
-    target_compile_options(tcp_request
-      PUBLIC
-        -Wall -Wextra -Wpedantic
+      PROPERTIES 
+        COMPILE_OPTIONS -Wall -Wextra -Wpedantic
     )
 endif()
 
@@ -44,6 +51,7 @@ add_library(tev
 )
 target_link_libraries(tev 
   PRIVATE
+    streambuf
     tcp_response
     tcp_request
   INTERFACE

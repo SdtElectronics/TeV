@@ -29,7 +29,7 @@ void TCPrequest::send(const char* hostname, const char* port){
 
 void TCPrequest::asyncConnect(const tcp::resolver::results_type& results){
     auto self(std::static_pointer_cast<TCPrequest>(this->shared_from_this()));
-    asio::async_connect(socket_, results, 
+    asio::async_connect(stream_, results, 
     [self](const std::error_code& ec, const tcp::endpoint&){
         if(!ec){
             self->dialogue_->onConnect(*self);

@@ -61,7 +61,7 @@ void TCPrequest::send(const char* hostname, const char* port, const duration<Rep
         );
 
         if (!ec){
-            asio::async_connect(self->socket_, results, 
+            asio::async_connect(self->stream_, results, 
             [self, timerPtr](const std::error_code& ec, const tcp::endpoint&){
                 timerPtr->cancel();
                 if(!ec){
