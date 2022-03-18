@@ -24,7 +24,7 @@ class TimeoutServer: public Session{
 
   private:
     void doRead(TCPsession& session){
-        auto timerPtr = std::make_shared<TCPsession::Timer>(
+        auto timerPtr = std::make_shared<Timer>(
             session.expire(std::chrono::seconds(10), 
             [](const std::error_code& ec){
                 std::cout << "No message from client after 10s, session expired" << std::endl;
@@ -41,8 +41,7 @@ class TimeoutServer: public Session{
 };
 
 int main(int argc, char* argv[]){
-    asio::io_context io_context;
-    Service<> srv(atoi(argv[1]), io_context);
+    Service<> srv(atoi(argv[1]));
     srv.start([]{return std::make_shared<TimeoutServer>();});
-    io_context.run();
+    Worker::run();
 }

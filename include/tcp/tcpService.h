@@ -11,8 +11,9 @@
 #include <utility>
 
 #include "asio/asio.hpp"
-#include "session.h"
 #include "internal/tcpResponse.h"
+#include "session.h"
+#include "worker.h"
 
 namespace tev{
 
@@ -25,9 +26,9 @@ template<>
 class Service<V4ORV6>{
   public:
     // port: port this service to listen
-    Service(short port, asio::io_context& asio_ctx):
-        acceptorV4_(asio_ctx, tcp::endpoint(tcp::v4(), port)),
-        acceptorV6_(asio_ctx, tcp::endpoint(tcp::v6(), port)){
+    Service(short port):
+        acceptorV4_(Worker::getContext(), tcp::endpoint(tcp::v4(), port)),
+        acceptorV6_(Worker::getContext(), tcp::endpoint(tcp::v6(), port)){
             std::error_code ec;
             // Some system don't support this flag
             // Use error_code to prevent throwing an exception
@@ -37,9 +38,9 @@ class Service<V4ORV6>{
     // addrV4: IPv4 address to listen
     // addrV6: IPv6 address to listen
     // port: port this service to listen
-    Service(const char* addrV4, const char* addrV6, short port, asio::io_context& asio_ctx):
-        acceptorV4_(asio_ctx, tcp::endpoint(asio::ip::address::from_string(addrV4), port)),
-        acceptorV6_(asio_ctx, tcp::endpoint(asio::ip::address::from_string(addrV6), port)){
+    Service(const char* addrV4, const char* addrV6, short port):
+        acceptorV4_(Worker::getContext(), tcp::endpoint(asio::ip::address::from_string(addrV4), port)),
+        acceptorV6_(Worker::getContext(), tcp::endpoint(asio::ip::address::from_string(addrV6), port)){
             std::error_code ec;
             acceptorV6_.set_option(asio::ip::v6_only(true), ec);
     }
@@ -83,14 +84,14 @@ template<>
 class Service<V4ONLY>{
   public:
     // port: port this service to listen
-    Service(short port, asio::io_context& asio_ctx):
-        acceptor_(asio_ctx, tcp::endpoint(tcp::v4(), port)){
+    Service(short port):
+        acceptor_(Worker::getContext(), tcp::endpoint(tcp::v4(), port)){
     }
 
     // addrV4: IPv4 address to listen
     // port: port this service to listen
-    Service(const char* addrV4, short port, asio::io_context& asio_ctx):
-        acceptor_(asio_ctx, tcp::endpoint(asio::ip::address::from_string(addrV4), port)){
+    Service(const char* addrV4, short port):
+        acceptor_(Worker::getContext(), tcp::endpoint(asio::ip::address::from_string(addrV4), port)){
     }
 
     template<typename DF>
@@ -125,16 +126,16 @@ template<>
 class Service<V6ONLY>{
   public:
     // port: port this service to listen
-    Service(short port, asio::io_context& asio_ctx):
-        acceptor_(asio_ctx, tcp::endpoint(tcp::v6(), port)){
+    Service(short port):
+        acceptor_(Worker::getContext(), tcp::endpoint(tcp::v6(), port)){
         std::error_code ec;
         acceptor_.set_option(asio::ip::v6_only(true), ec);
     }
 
     // addrV6: IPv6 address to listen
     // port: port this service to listen
-    Service(const char* addrV4, const char* addrV6, short port, asio::io_context& asio_ctx):
-        acceptor_(asio_ctx, tcp::endpoint(asio::ip::address::from_string(addrV6), port)){
+    Service(const char* addrV4, const char* addrV6, short port):
+        acceptor_(Worker::getContext(), tcp::endpoint(asio::ip::address::from_string(addrV6), port)){
         std::error_code ec;
         acceptor_.set_option(asio::ip::v6_only(true), ec);
     }

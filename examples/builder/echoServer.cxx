@@ -19,8 +19,6 @@ void doRead(TCPsession& session){
 
 // First command line parameter is the port to listen
 int main(int argc, char* argv[]){
-    asio::io_context io_context;
-    
     auto session = SessionBuilder<>().onConnect([](TCPsession& session){
         doRead(session);
     }).onDisconnect([](TCPsession& session){
@@ -30,7 +28,7 @@ int main(int argc, char* argv[]){
         std::cout << err << std::endl;
     }).buildFactory();
 
-    Service<> srv(atoi(argv[1]), io_context);
+    Service<> srv(atoi(argv[1]));
     srv.start(session);
-    io_context.run();
+    Worker::run();
 }

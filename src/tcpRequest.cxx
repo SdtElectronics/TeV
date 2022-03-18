@@ -7,12 +7,13 @@
 #include "tcp/tcpRequest.h"
 #endif
 
+#include "worker.h"
+
 namespace tev{
 
-TCPrequest::TCPrequest(dialoguePtr dialogue, asio::io_context& asio_ctx, std::size_t maxLength):
-    TCPsession(tcp::socket(asio_ctx), dialogue, maxLength),
-    resolver_(asio_ctx),
-    asio_ctx_(asio_ctx){
+TCPrequest::TCPrequest(dialoguePtr dialogue , std::size_t maxLength):
+    TCPsession(tcp::socket(Worker::getContext()), dialogue, maxLength),
+    resolver_(Worker::getContext()){
 }
 
 void TCPrequest::send(const char* hostname, const char* port){

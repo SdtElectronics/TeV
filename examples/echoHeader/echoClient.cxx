@@ -37,10 +37,6 @@ class EchoClient: public Session{
 };
 
 int main(int argc, char* argv[]){
-    asio::io_context io_context;
-    std::make_shared<TCPrequest>(
-        std::make_shared<EchoClient>(),
-        io_context
-    )->send(argv[1], argv[2]);
-    io_context.run();
+    std::make_shared<TCPrequest>(std::make_shared<EchoClient>())->send(argv[1], argv[2]);
+    Worker::run();
 }

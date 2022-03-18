@@ -20,8 +20,6 @@ void doWrite(TCPsession& session){
 }
 
 int main(int argc, char* argv[]){
-    asio::io_context io_context;
-
     // <> after SessionBuilder can be omitted for C++17 or above
     auto session = SessionBuilder<>().onConnect([](TCPsession& session){
         doWrite(session);
@@ -32,6 +30,6 @@ int main(int argc, char* argv[]){
         std::cout << err << std::endl;
     }).build();
 
-    std::make_shared<TCPrequest>(session, io_context)->send(argv[1], argv[2]);
-    io_context.run();
+    std::make_shared<TCPrequest>(session)->send(argv[1], argv[2]);
+    Worker::run();
 }

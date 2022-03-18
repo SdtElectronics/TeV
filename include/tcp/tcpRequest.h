@@ -23,7 +23,7 @@ class TCPrequest: public TCPsession{
     using dialoguePtr  = std::shared_ptr<Session>;
     // dialogue: std::shared_ptr to the request object
     TEVINLINE
-    TCPrequest(dialoguePtr dialogue, asio::io_context& asio_ctx, std::size_t maxLength = 65535);
+    TCPrequest(dialoguePtr dialogue , std::size_t maxLength = 65535);
     // send request to hostname:port
     TEVINLINE void send(const char* hostname, const char* port);
 
@@ -37,13 +37,12 @@ class TCPrequest: public TCPsession{
     TEVINLINE void asyncConnect(const tcp::resolver::results_type& results);
 
     tcp::resolver resolver_;
-    asio::io_context& asio_ctx_;
 };
 
 template<typename Rep, typename Period>
 void TCPrequest::send(const char* hostname, const char* port, const duration<Rep, Period>& timeout){
     auto self(std::static_pointer_cast<TCPrequest>(this->shared_from_this()));
-    auto timerPtr = std::make_shared<TCPsession::Timer>(
+    auto timerPtr = std::make_shared<Timer>(
         expire(timeout, 
         [this](const std::error_code& ec){
             dialogue_->onConnectError(*this, std::string("Resolve timeout"));
@@ -53,7 +52,7 @@ void TCPrequest::send(const char* hostname, const char* port, const duration<Rep
     resolver_.async_resolve(hostname, port, 
     [self, timerPtr](const std::error_code& ec, const tcp::resolver::results_type& results) mutable{
         timerPtr->cancel();
-        timerPtr = std::make_shared<TCPsession::Timer>(
+        timerPtr = std::make_shared<Timer>(
             self->expireAt(timerPtr->expiry(), 
             [self](const std::error_code& ec){
                 self->dialogue_->onConnectError(*self, std::string("Connect timeout"));

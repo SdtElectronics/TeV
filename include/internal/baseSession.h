@@ -15,6 +15,7 @@
 #include "sharedBuf.h"
 #include "streambuf.h"
 #include "tevdefs.h"
+#include "timer.h"
 
 namespace tev{
 namespace internal{
@@ -42,18 +43,6 @@ class BaseSession: public std::enable_shared_from_this<BaseSession<T, S> >{
     template <typename CB>
     void asyncWrite(SharedBuffer bufs, CB&& callback);
 
-    template <typename Rep, typename Period>
-    using duration = std::chrono::duration<Rep, Period>;
-    using Timer = asio::steady_timer;
-    using TimePoint = std::chrono::time_point<std::chrono::steady_clock>;
-
-    template <typename CB>
-    // Invoke callback at timePoint
-    Timer deferAt(const TimePoint& timePoint, CB&& callback);
-    // Invoke callback after timeout
-    template <typename Rep, typename Period, typename CB>
-    Timer defer(const duration<Rep, Period>& timeout, CB&& callback);
-
     inline std::string getMessage(std::size_t length);
     inline std::string getMessage();
 
@@ -63,7 +52,6 @@ class BaseSession: public std::enable_shared_from_this<BaseSession<T, S> >{
     S stream_;
     std::shared_ptr<Session> dialogue_;
 
-  private:
     void handleReadError(const std::error_code& ec);
     streambuf message_;
 };
@@ -161,27 +149,6 @@ void BaseSession<T, S>::asyncWrite(SharedBuffer bufs, CB&& callback){
 }
 
 template <typename T, typename S>
-template <typename CB>
-typename BaseSession<T, S>::Timer BaseSession<T, S>::deferAt(
-    const typename BaseSession<T, S>::TimePoint& timePoint, CB&& callback){
-    auto& ctx = static_cast<asio::io_context&>(stream_.get_executor().context());
-    Timer timer(ctx, timePoint);
-    timer.async_wait([TEVCAPTMOVE(callback)](const std::error_code& ec){
-        if(ec != asio::error::operation_aborted){
-            callback(ec);
-        }
-    });
-    return timer;
-}
-
-template <typename T, typename S>
-template <typename Rep, typename Period, typename CB>
-typename BaseSession<T, S>::Timer BaseSession<T, S>::defer(
-    const typename BaseSession<T, S>::duration<Rep, Period>& timeout, CB&& callback){
-    return deferAt(std::chrono::steady_clock::now() + timeout, std::forward<CB>(callback));
-}
-
-template <typename T, typename S>
 std::string BaseSession<T, S>::getMessage(std::size_t length){
     return message_.getMessage(length);
 }
@@ -200,7 +167,7 @@ void BaseSession<T, S>::handleReadError(const std::error_code& ec){
     }
 }
 
-}
-}
+} // namespace internal
+} // namespace tev
 
 #endif

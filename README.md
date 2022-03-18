@@ -50,9 +50,9 @@ class Server: public Session{
 int main(){
     asio::io_context io_context;
     unsigned short port = 1701;
-    Service<> srv(port, io_context);
+    Service<> srv(port);
     srv.start([]{return std::make_shared<Server>();});
-    io_context.run();
+    Worker::run();
 }
 </pre>
 </td>
@@ -80,9 +80,9 @@ int main(){
     }).buildFactory();
 
     unsigned short port = 1701;
-    Service<> srv(port, io_context);
+    Service<> srv(port);
     srv.start(session);
-    io_context.run();
+    Worker::run();
 }
 </pre>
 </td>

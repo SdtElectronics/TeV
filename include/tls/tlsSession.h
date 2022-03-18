@@ -12,16 +12,28 @@ namespace tev{
 
 using asio::ssl;
 
-class TLSsession: public internal::BaseSession<TLSsession>{
+class TLSsession: public internal::BaseSession<TCPsession, ssl::stream<tcp::socket> >{
   public:
     TEVINLINE
     TLSsession(
-        ssl::context ctx, 
         tcp::socket socket, 
         std::shared_ptr<Session> dialogue, 
         std::size_t maxLength);
 
-  private:
+    // Close session at timePoint
+    template<typename CB>
+    Timer expireAt(const TimePoint& timePoint, CB&& callback);
+    // Close session after timeout
+    template<typename Rep, typename Period>
+    Timer expire(const duration<Rep, Period>& timeout);
+    // Invoke callback and close session after timeout
+    template<typename Rep, typename Period, typename CB>
+    Timer expire(const duration<Rep, Period>& timeout, CB&& callback);
+
+    TEVINLINE void close();
+
+    TEVINLINE std::string getRemoteIP() const;
+    TEVINLINE unsigned short getRemotePort() const;
 
 };
 

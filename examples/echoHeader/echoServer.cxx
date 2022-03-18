@@ -33,8 +33,7 @@ class EchoServer: public Session{
 };
 
 int main(int argc, char* argv[]){
-    asio::io_context io_context;
-    Service<> srv(atoi(argv[1]), io_context);
+    Service<> srv(atoi(argv[1]));
     srv.start([]{return std::make_shared<EchoServer>();});
-    io_context.run();
+    Worker::run();
 }

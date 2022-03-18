@@ -16,7 +16,7 @@ class HTTPclient: public Session{
     }
 
     virtual void onConnect     (TCPsession& session                        )override{
-        auto timerPtr = std::make_shared<TCPsession::Timer>(
+        auto timerPtr = std::make_shared<Timer>(
             session.expire(std::chrono::seconds(60), 
             [](const std::error_code& ec){
                 std::cout << "Request timeout" << std::endl;
@@ -46,10 +46,8 @@ class HTTPclient: public Session{
 };
 
 int main(int argc, char* argv[]){
-    asio::io_context io_context;
     std::make_shared<TCPrequest>(
-        std::make_shared<HTTPclient>(argv[1], argv[2]),
-        io_context
+        std::make_shared<HTTPclient>(argv[1], argv[2])
     )->send(argv[1], "http", std::chrono::seconds(180));
-    io_context.run();
+    Worker::run();
 }
