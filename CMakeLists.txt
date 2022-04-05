@@ -17,8 +17,8 @@ if(EXISTS "${LOC_PATH}")
 endif()
 
 ## Setup dependencies using CPM
-set(CPM_SOURCE_CACHE "${PROJECT_SOURCE_DIR}/external")
 include("cmake/getCPM.cmake")
+include("cmake/getASIO.cmake")
 
 if(BUILD_TESTS)
   CPMAddPackage(

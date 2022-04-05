@@ -5,7 +5,7 @@
 
 #ifndef TEVHDRONLY
 
-#include "tcp/tcpSession.h"
+#include "tls/tlsSession.h"
 #endif
 
 namespace tev{

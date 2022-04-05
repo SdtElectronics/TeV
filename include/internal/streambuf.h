@@ -8,7 +8,7 @@
 
 #include <string>
 
-#include "asio/asio.hpp"
+#include "asio.hpp"
 #include "tevdefs.h"
 
 namespace tev{

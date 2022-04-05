@@ -4,7 +4,10 @@ add_library(streambuf OBJECT
 target_include_directories(streambuf 
   PUBLIC
     ${PROJECT_SOURCE_DIR}/include
-    ${PROJECT_SOURCE_DIR}/include/asio
+)
+target_link_libraries(streambuf
+  PRIVATE
+    asio
 )
 
 add_library(tcp_response OBJECT
@@ -13,7 +16,10 @@ add_library(tcp_response OBJECT
 target_include_directories(tcp_response 
   PUBLIC
     ${PROJECT_SOURCE_DIR}/include
-    ${PROJECT_SOURCE_DIR}/include/asio
+)
+target_link_libraries(tcp_response
+  PRIVATE
+    asio
 )
 
 add_library(tcp_request OBJECT
@@ -23,6 +29,10 @@ target_include_directories(tcp_request
   PUBLIC
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/include/asio
+)
+target_link_libraries(tcp_request
+  PRIVATE
+    asio
 )
 
 if(MSVC)
@@ -56,6 +66,8 @@ target_link_libraries(tev
     tcp_request
   INTERFACE
     Threads::Threads
+  PUBLIC
+    asio
 )
 
 target_include_directories(tev 

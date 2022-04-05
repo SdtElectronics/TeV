@@ -1,10 +1,6 @@
 add_executable(echoServerNulTer
     echoServer.cxx
 )
-target_include_directories(echoServerNulTer 
-  PRIVATE
-    ${PROJECT_SOURCE_DIR}/include/asio
-)
 target_link_libraries(echoServerNulTer 
   PRIVATE
     tev
@@ -12,10 +8,6 @@ target_link_libraries(echoServerNulTer
 
 add_executable(echoClientNulTer
     echoClient.cxx
-)
-target_include_directories(echoClientNulTer 
-  PRIVATE
-    ${PROJECT_SOURCE_DIR}/include/asio
 )
 target_link_libraries(echoClientNulTer 
   PRIVATE

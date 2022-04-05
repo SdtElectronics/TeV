@@ -6,7 +6,7 @@
 #ifndef tevworker
 #define tevworker
 
-#include "asio/asio.hpp"
+#include "asio.hpp"
 
 namespace tev{
 

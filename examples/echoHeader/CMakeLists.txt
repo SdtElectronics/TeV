@@ -1,10 +1,6 @@
 add_executable(echoServerHeader
     echoServer.cxx
 )
-target_include_directories(echoServerHeader 
-  PRIVATE
-    ${PROJECT_SOURCE_DIR}/include/asio
-)
 target_link_libraries(echoServerHeader 
   PRIVATE
     tev
@@ -12,10 +8,6 @@ target_link_libraries(echoServerHeader
 
 add_executable(echoClientHeader
     echoClient.cxx
-)
-target_include_directories(echoClientHeader 
-  PRIVATE
-    ${PROJECT_SOURCE_DIR}/include/asio
 )
 target_link_libraries(echoClientHeader 
   PRIVATE

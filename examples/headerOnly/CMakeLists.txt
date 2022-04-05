@@ -3,7 +3,7 @@ add_executable(echoServerHdrOnly
 )
 target_include_directories(echoServerHdrOnly
   PRIVATE
-    ${PROJECT_SOURCE_DIR}/include/asio
+    ${asio_SOURCE_DIR}/asio/include
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}
 )
@@ -17,7 +17,7 @@ add_executable(echoClientHdrOnly
 )
 target_include_directories(echoClientHdrOnly
   PRIVATE
-    ${PROJECT_SOURCE_DIR}/include/asio
+    ${asio_SOURCE_DIR}/asio/include
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}
 )

@@ -6,7 +6,7 @@
 #ifndef tevtimer
 #define tevtimer
 
-#include "asio/asio.hpp"
+#include "asio.hpp"
 #include "internal/tevdefs.h"
 #include "worker.h"
 
@@ -18,10 +18,10 @@ class Timer: public asio::steady_timer{
     using Duration = std::chrono::duration<Rep, Period>;
     using TimePoint = std::chrono::time_point<std::chrono::steady_clock>;
 
-    // Construct a timer fire at timePoint
+    // Construct a timer fires at timePoint
     inline Timer(const TimePoint& timePoint);
 
-    // Construct a timer fire after timeout
+    // Construct a timer fires after timeout
     template <typename Rep, typename Period>
     Timer(const Duration<Rep, Period>& timeout);
 
