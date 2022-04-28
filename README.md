@@ -1,4 +1,6 @@
 # TeV
+![build workflow](https://github.com/SdtElectronics/TeV/actions/workflows/build.yml/badge.svg)
+
 Thin wrapper of boost.asio for creating applications based on asynchronous TCP sockets.
 
 * Based on asio library and therefore gained the same cross-platform ability
