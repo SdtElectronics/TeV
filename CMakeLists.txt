@@ -6,7 +6,7 @@ project(
   LANGUAGES CXX)
 
 option(BUILD_EXAMPLES "Build examples" ON)
-option(BUILD_TESTS "Build test" OFF)
+option(BUILD_TESTS "Build test" ON)
 
 ### Require out-of-source builds
 file(TO_CMAKE_PATH "${PROJECT_BINARY_DIR}/CMakeLists.txt" LOC_PATH)
@@ -58,5 +58,6 @@ if(BUILD_EXAMPLES)
 endif()
 
 if(BUILD_TESTS)
+  enable_testing()
   add_subdirectory(tests)
 endif()

@@ -46,20 +46,20 @@ Timer TCPsession::expire(const Timer::Duration<Rep, Period>& timeout){
 template<typename CB>
 Timer TCPsession::expireAt(const Timer::TimePoint& timePoint, CB&& callback){
     Timer timer(timePoint);
-    timer.start([this, TEVCAPTMOVE(callback](const std::error_code& ec){
+    timer.start([this, TEVCAPTMOVE(callback)](const std::error_code& ec){
         callback(ec);
         close();
-    }));
+    });
     return timer;
 }
 
 template<typename Rep, typename Period, typename CB>
 Timer TCPsession::expire(const Timer::Duration<Rep, Period>& timeout, CB&& callback){
     Timer timer(timeout);
-    timer.start([this, TEVCAPTMOVE(callback](const std::error_code& ec){
+    timer.start([this, TEVCAPTMOVE(callback)](const std::error_code& ec){
         callback(ec);
         close();
-    }));
+    });
     return timer;
 }
 
